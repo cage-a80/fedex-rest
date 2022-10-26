@@ -1,0 +1,37 @@
+{
+    "name": "cage-a80/fedex-rest",
+    "description": "FedEx REST API",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [ "shipping", "fedex", "API", "REST" ],
+    "autoload": {
+        "psr-4": { "CageA80\\FedEx\\": "src/FedEx" }
+    },
+    "prefer-stable": true,
+    "require": {
+        "illuminate/support": "^5.5|^6|^7|^8|^9",
+        "guzzlehttp/guzzle": "^7.2",
+        "php": ">=7.4.0",
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        },
+        "laravel": {
+            "providers": [
+                "CageA80\\FedEx\\ServiceProvider"
+            ],
+            "aliases": {
+                "FedEx": "CageA80\\FedEx\\Facades\\FedExFacade"
+            }
+        }
+    },
+    "authors": [
+        {
+            "name": "Eugene Bourne",
+            "email": "bourne.eugene@gmail.com"
+        }
+    ]
+}
