@@ -19,18 +19,27 @@ class RatesResponse
     public function details(string $type = null): array
     {
         return array_map(
-            function(array $service) use ($type) {
-                $price = Arr::first($service['ratedShipmentDetails'], function(array $details) use ($type) {
+            function (array $service) use ($type) {
+                $price = Arr::first($service['ratedShipmentDetails'], function (array $details) use ($type) {
                     return !$type || $details['rateType'] == $type;
                 });
 
                 return array_merge([
                     'serviceType' => $service['serviceType'],
                     'serviceName' => $service['serviceName'],
-                    'shippingPrice' => $price['totalNetCharge'],
-                    'rateType' => $type,
-                    'raw' => $service
-                ], isset($service['commit']) ? ['transitTime' => $service['commit']] : []);
+                    'rateType' => $price['rateType'],
+                    'charges' => [
+                        'base' => $price['totalBaseCharge'],
+                        'surcharge' => Arr::get($price, 'shipmentRateDetail.totalSurcharges'),
+                        'discounts' => $price['totalDiscounts'],
+                        'total' => $price['totalNetCharge'],
+                        'currency' => $price['currency']
+                    ],
+                    'shipmentDetails' => $price,
+                ],
+                    Arr::get($this->config, 'ratesRaw', false) ? ['raw' => $service] : [],
+                    isset($service['commit']) ? ['transitTime' => $service['commit']] : []
+                );
             },
             Arr::get($this->data, 'output.rateReplyDetails', [])
         );

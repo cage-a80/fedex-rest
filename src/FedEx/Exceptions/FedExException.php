@@ -6,12 +6,17 @@ use Throwable;
 
 class FedExException extends \Exception
 {
-    protected array $data = [];
+    protected ?array $context = [];
 
-    public function __construct($message = "", $code = 0, array $data = [], Throwable $previous = null)
+    public function __construct($message = "", $code = 0, ?array $context = null, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
 
-        $this->data = $data;
+        $this->context = $context;
+    }
+
+    public function getContext(): ?array
+    {
+        return $this->context;
     }
 }

@@ -32,8 +32,7 @@ abstract class RequestAbstract
 
         if (class_exists($providerClassName)) {
             $providerConfig = array_merge(
-                ['base_uri' => $this->config['environment'] === EnvironmentType::SANDBOX ?
-                    static::SANDBOX_SERVER : static::PRODUCTION_SERVER],
+                ['base_uri' => $this->getApiEndpoint($this->config['environment'])],
                 $this->config['providerConfig'] ?? [],
                 $config
             );
@@ -42,6 +41,22 @@ abstract class RequestAbstract
         }
 
         throw new \InvalidArgumentException('Unknown HttpProvider class name: ' . $providerClassName);
+    }
+
+    protected function getApiEndpoint(string $environment): string
+    {
+        switch ($environment) {
+            case EnvironmentType::PRODUCTION:
+                return static::PRODUCTION_SERVER;
+
+            case EnvironmentType::SANDBOX:
+                return static::SANDBOX_SERVER;
+
+            case EnvironmentType::MOCK:
+                return $this->config['mockEndpoint'];
+        }
+
+        throw new \Exception('Unknown server environment: ' . $environment);
     }
 
     protected function request(callable $method)

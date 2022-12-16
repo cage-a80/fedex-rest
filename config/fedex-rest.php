@@ -9,7 +9,8 @@ return [
     | Common FedEx web services credentials
     |
     */
-    'env' => env('FEDEX_ENVIRONMENT', \CageA80\FedEx\Support\EnvironmentType::SANDBOX),
+    'environment' => env('FEDEX_ENVIRONMENT', \CageA80\FedEx\Support\EnvironmentType::SANDBOX),
+    'mockEndpoint' => env('FEDEX_MOCK_ENDPOINT', '/api/v1/fedex-mock'),
     'accountNumber' => env('FEDEX_ACCOUNT_NUMBER' . (env('FEDEX_ENVIRONMENT', \CageA80\FedEx\Support\EnvironmentType::SANDBOX) == \CageA80\FedEx\Support\EnvironmentType::SANDBOX ? '_SANDBOX' : '')),
     'key' => env('FEDEX_KEY' . (env('FEDEX_ENVIRONMENT', \CageA80\FedEx\Support\EnvironmentType::SANDBOX) == \CageA80\FedEx\Support\EnvironmentType::SANDBOX ? '_SANDBOX' : '')),
     'secret' => env('FEDEX_SECRET' . (env('FEDEX_ENVIRONMENT', \CageA80\FedEx\Support\EnvironmentType::SANDBOX) == \CageA80\FedEx\Support\EnvironmentType::SANDBOX ? '_SANDBOX' : '')),
@@ -44,6 +45,30 @@ return [
     |
     */
     'rateRequestType' => [\CageA80\FedEx\Support\RateRequestType::LIST],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Auth provider
+    |--------------------------------------------------------------------------
+    | Specify auth token provider.
+    |
+    | Valid values: \CageA80\FedEx\AuthProvider | \CageA80\FedEx\AuthCacheProvider
+    |
+    */
+    'authProvider' => \CageA80\FedEx\AuthCacheProvider::class,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Request duties and taxes
+    |--------------------------------------------------------------------------
+    |
+    | Request estimated duties and taxes related information
+    |
+    | Valid values: NONE | ALL
+    |
+    | Request field: edtRequestType
+    */
+    'edtRequestType' => \CageA80\FedEx\Support\EdtRequestType::NONE,
 
     /*
     |--------------------------------------------------------------------------
@@ -174,6 +199,26 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Verify SSL
+    |--------------------------------------------------------------------------
+    |
+    | Specify whether GuzzleHttp should verify SSL cert
+    |
+    */
+    'verifySSL' => env('FEDEX_VERIFY_SSL', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Rates RAW
+    |--------------------------------------------------------------------------
+    |
+    | Include rates RAW data in the output feed
+    |
+    */
+    'ratesRaw' => false,
+
+    /*
+    |--------------------------------------------------------------------------
     | Sample data
     |--------------------------------------------------------------------------
     |
@@ -191,4 +236,14 @@ return [
     |
     */
     'log' => env('FEDEX_LOG', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Logging channel
+    |--------------------------------------------------------------------------
+    |
+    | Specify logging channel
+    |
+    */
+    'logChannel' => env('FEDEX_LOG_CHANNEL'),
 ];

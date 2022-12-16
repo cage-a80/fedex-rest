@@ -6,6 +6,7 @@ use CageA80\FedEx\Contracts\HttpProvider;
 use CageA80\FedEx\Exceptions\FedExException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\MessageInterface;
 
@@ -38,16 +39,31 @@ class GuzzleHttpProvider implements HttpProvider
             $result = $this->parseMessageBody($response);
 
             if (is_callable($this->config['onAfterRequest'] ?? null)) {
-                call_user_func($this->config['onAfterRequest'], $url, $result, $response, $client);
+                call_user_func($this->config['onAfterRequest'], $url, $data, $headers, $result, $response, $client);
             }
 
             return $result;
-        } catch (ClientException $e) {
-            $data = $this->parseMessageBody($e->getResponse());
+        }
+        catch (ClientException $e) {
+            $responseData = $this->parseMessageBody($e->getResponse());
 
-            $error = ($data['errors'] ?? [])[0] ?? [];
+            $error = ($responseData['errors'] ?? [])[0] ?? [];
 
-            throw new FedExException($error['message'] ?? $e->getMessage(), $e->getCode(), ['response' => $data], $e);
+            if (is_callable($this->config['onClientError'] ?? null)) {
+                call_user_func($this->config['onClientError'], $e->getMessage(), $e->getCode(), $url, $data, $headers, ['response' => $responseData]);
+            }
+
+            throw new FedExException($error['message'] ?? $e->getMessage(), $e->getCode(), [
+                'request' => $data,
+                'response' => $responseData
+            ], $e);
+        }
+        catch (ServerException $e) {
+            if (is_callable($this->config['onServerError'] ?? null)) {
+                call_user_func($this->config['onServerError'], $e->getMessage(), $e->getCode(), $url, $data, $headers);
+            }
+
+            throw new FedExException($e->getMessage(), $e->getCode(), ['request' => $data], $e);
         }
     }
 
