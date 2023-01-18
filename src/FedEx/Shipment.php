@@ -41,7 +41,7 @@ class Shipment
             'rateRequestType' => $config['rateRequestType'] ?? [RateRequestType::LIST],
             'pickupType' => $config['pickupType'] ?? PickupType::DROPOFF_AT_FEDEX_LOCATION,
             'edtRequestType' => $config['edtRequestType'] ?? EdtRequestType::NONE,
-            'customsClearanceDetails' => [
+            'customsClearanceDetail' => [
                 'commercialInvoice' => [
                     'shipmentPurpose' => ShipmentPurpose::COMMERCIAL,
                 ],
@@ -145,7 +145,7 @@ class Shipment
     public function addCommodity(array $commodity): self
     {
         $this->validateCommodity($commodity)
-            ->data['customsClearanceDetails']['commodities'][] = $commodity;
+            ->data['customsClearanceDetail']['commodities'][] = $commodity;
 
         return $this;
     }
