@@ -144,6 +144,9 @@ class Shipment
      */
     public function addCommodity(array $commodity): self
     {
+        $commodity['name'] = html_entity_decode(isset($commodity['name']) ? $commodity['name'] : '');
+        $commodity['name'] = str_replace(';', '', $commodity['name']);
+
         $this->validateCommodity($commodity)
             ->data['customsClearanceDetail']['commodities'][] = $commodity;
 
@@ -245,6 +248,10 @@ class Shipment
     {
         if (!count($commodity)) {
             throw new ValidationException('Commodity could not be empty');
+        }
+
+        if (!isset($commodity['name']) || !$commodity['name']) {
+            throw new ValidationException('Commodity name is required');
         }
 
         if (isset($commodity['customsValue'])) {
