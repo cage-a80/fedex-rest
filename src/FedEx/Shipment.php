@@ -219,7 +219,7 @@ class Shipment
             throw new ValidationException('Invalid package weight: ' . $package['weight']['value']);
         }
 
-        if (($this->config['maxPackageWeight'] ?? 0) && $package['weight']['value'] > $this->config['maxPackageWeight']) {
+        if (($this->config['maxPackageWeight'] ?? 0) && round($package['weight']['value'], 8) > round($this->config['maxPackageWeight'], 8)) {
             throw new ValidationException('Package weight should be less or equal than ' . $this->config['maxPackageWeight']);
         }
 
