@@ -4,10 +4,12 @@
     "type": "library",
     "license": "MIT",
     "keywords": [ "shipping", "fedex", "API", "REST" ],
-    "autoload": {
-        "psr-4": { "CageA80\\FedEx\\": "src/FedEx" }
-    },
-    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Eugene Bourne",
+            "email": "bourne.eugene@gmail.com"
+        }
+    ],
     "require": {
         "illuminate/support": "^8|^9|^10|^11",
         "guzzlehttp/guzzle": "^7.2",
@@ -16,10 +18,10 @@
         "ext-json": "*",
         "psr/log": "^1.0|^2.0|^3.0"
     },
+    "autoload": {
+        "psr-4": { "CageA80\\FedEx\\": "src/FedEx" }
+    },
     "extra": {
-        "branch-alias": {
-            "dev-main": "1.x-dev"
-        },
         "laravel": {
             "providers": [
                 "CageA80\\FedEx\\ServiceProvider"
@@ -29,10 +31,6 @@
             }
         }
     },
-    "authors": [
-        {
-            "name": "Eugene Bourne",
-            "email": "bourne.eugene@gmail.com"
-        }
-    ]
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }
